@@ -11,10 +11,11 @@ from django.db.models import Q
 
 def check_booking(start_date  , end_date ,uid , room_count):
     qs = HotelBooking.objects.filter(
-        start_date__lte=start_date,
-        end_date__gte=end_date,
-        hotel__uid = uid
-        )
+        Q(start_date__gte=start_date,
+          end_date__lte=end_date)
+        | Q(start_date__lte=start_date,
+            end_date__gte=end_date)
+    )
     
     if len(qs) >= room_count:
         return False
